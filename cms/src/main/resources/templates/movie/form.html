@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+
+<style>
+  .select2-container .select2-selection--single {
+      height: 35px;
+      line-height: 35px;
+  }
+
+  .select2-container .select2-dropdown {
+      max-height: 200px;
+      overflow-y: auto;
+  }
+</style>
+<body>
+<section class="content" th:fragment="content">
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 th:text="#{createMovie}"></h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item active"></li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- Default box -->
+    <div class="container-fluid">
+      <div class="card card-default">
+        <div class="card-body">
+          <div class="d-flex justify-content-start mb-3">
+            <a th:href="@{'/cmsmovie/movie/index/1'}"
+               th:text="#{back}"
+               class="btn btn-danger"
+               style="width: 125px; left: 886px; top: 389px; border-radius: 3px; margin-left: 8px">
+            </a>
+
+          </div>
+          <form th:action="@{'/cmsmovie/movie/save'}" method="post" th:object="${model}" enctype="multipart/form-data">
+            <input type="hidden" id="id" name="id" th:value="${model.id}?${model.id}">
+            <div class="row mb-3">
+              <div class="col-6">
+                <label for="movie_name" style="font-weight: bold"><span>[[#{movie_name}]]</span><span style="color:red"> *</span></label>
+                <input type="text" id="movie_name" th:field="*{movie_name}" name="movie_name"
+                       class="form-control" required style="height: 35px" maxlength="50">
+              </div>
+
+              <div class="col-6">
+                <label for="movie_code" style="font-weight: bold"><span>[[#{movie_code}]]</span><span style="color:red"> *</span></label>
+                <input type="text" id="movie_code" th:field="*{movie_code}" name="movie_code"
+                       class="form-control" style="height: 35px" maxlength="50" required>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6">
+                <label for="language" style="font-weight: bold"><span>[[#{language}]]</span><span style="color:red"> *</span></label>
+                <input type="text" id="language" th:field="*{language}" name="language"
+                       class="form-control" style="height: 35px" maxlength="50" required>
+              </div>
+
+              <div class="col-6">
+                <label for="release_date"><span>[[#{release_date}]] <span style="color: red;">*</span></span></label>
+                <input type="datetime-local" id="release_date" name="release_date" th:field="*{release_date}"
+                       class="form-control" step="1" required style="height: 35px">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6">
+                <label style="font-weight: bold"><span>[[#{type}]]</span><span style="color:red"> *</span></label>
+                <select class="form-control" id="type" th:field="*{type}" name="type" required style="height: 35px;">
+                  <option value='0' th:text="#{Movie}"></option>
+                  <option value='1' th:text="#{Series}"></option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label for="censorship" style="font-weight: bold">
+                  <span>[[#{censorship}]]</span><span style="color:red"> *</span>
+                </label>
+                <select id="censorship" th:field="*{censorship}" name="censorship" class="form-control" style="height: 35px" required>
+                  <option value="">-- [[#{selectAge}]] --</option>
+                  <option th:each="age : ${#numbers.sequence(0, 100)}" th:value="${age}" th:text="${age}"></option>
+                </select>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6" id="video-container" style="display: none;">
+                <label for="video_url" style="font-weight: bold"><span>[[#{video}]]</span><span style="color:red"> *</span></label>
+                <input type="text" id="video_url" th:field="*{video_url}" name="video_url"
+                       class="form-control"  style="height: 35px">
+              </div>
+              <div class="col-6" id="duration-container" style="display: none;">
+                <label for="duration" style="font-weight: bold"><span>[[#{duration}]]</span><span style="color:red"> *</span></label>
+                <input type="text" id="duration" th:field="*{duration}" name="duration"
+                       class="form-control"  style="height: 35px" maxlength="50">
+              </div>
+
+            </div>
+            <div class="row mb-3">
+              <div class="col-6">
+                <label for="movie_genre" style="font-weight: bold"><span>[[#{movie_genre}]]</span><span style="color:red"> *</span></label>
+                <input type="text" id="movie_genre" th:field="*{movie_genre}" name="movie_genre"
+                       class="form-control" required style="height: 35px" maxlength="50">
+              </div>
+
+
+              <div class="col-6">
+                <label for="category_id" style="font-weight: bold"><span>[[#{category}]] <span
+                        style="color: red;">*</span></span></label>
+                <select id="category_id" name="cateId" class="form-control" style="height: 35px" th:field=*{category_id}
+                        required>
+                  <option th:value="${model.category_id}" th:text="${model.category_id}"  style="height: 35px"></option>
+                </select>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6">
+                <label for="image_url" style="font-weight: bold"><span>[[#{image}]]</span><span style="color:red"> *</span></label>
+                <input type="text" id="image_url" th:field="*{image_url}" name="image_url"
+                       class="form-control" style="height: 35px"  required>
+              </div>
+
+              <div class="col-6">
+                <label for="description"
+                       style="font-weight: bold"><span>[[#{description}]]</span></label>
+                <textarea type="text" id="description" name="description"
+                          th:field=*{description}
+                          class="form-control" maxlength="255"
+                          style="font-size: 14px;"></textarea>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6">
+                  <label for="listActor"><span>[[#{actor}]]</span></label>
+                  <select class="form-control select2bs4" id="listActor" name="listActor">
+                    <option th:each="a : ${model.movieActors}"
+                            th:text="${a.actor.name}"
+                            th:value="${a.actor_code}">
+                  </select>
+              </div>
+              <div class="mb-3">
+                <label for="is_hot" style="font-weight: bold;"><span>[[#{is_hot}]]</span></label>
+                <select class="form-control" id="is_hot" name="is_hot" th:field="*{is_hot}" th:value="${is_hot}">
+                  <option value="1" th:text="#{is.Hot}">Is Hot</option>
+                  <option value="0" th:text="#{not.Is.Hot}">Not Hot</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-start mb-3"
+                 style="padding-left: 0 !important;">
+              <button id="submitButton" type="submit" class="btn btn-primary me-md-2"
+                      th:text="#{create}"
+                      style="width: 125px; left: 886px; top: 389px; border-radius: 3px;" th:if="${model.id==null}"></button>
+              <button id="submitButton" type="submit" class="btn btn-primary me-md-2"
+                      th:text="#{update}"
+                      style="width: 125px; left: 886px; top: 389px; border-radius: 3px;" th:if="${model.id!=null}"></button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+<script th:fragment="content">
+
+  $(document).ready(function () {
+      $('#category_id').select2({
+          ajax: {
+              type: 'GET',
+              url: 'http://localhost:8083/cmsmovie/category/ajax-search',
+              dataType: 'json',
+              delay: 250,
+              data: function (params) {
+                  return {
+                      input_: params.term
+                  };
+              },
+              processResults: function (data) {
+                  console.log("data:" + data);
+                  return {
+                      results: data
+                  };
+              },
+              cache: true
+          },
+          placeholder: `[[#{select2.category_id}]]`,
+          minimumInputLength: 0,
+          allowClear: true
+      });
+  });
+
+   document.addEventListener('DOMContentLoaded', function () {
+    const typeDropdown = document.getElementById('type');
+    const durationContainer = document.getElementById('duration-container');
+    const videoContainer = document.getElementById('video-container');
+     const videoInput = document.getElementById('video_url');
+  const durationInput = document.getElementById('duration');
+
+    typeDropdown.addEventListener('change', function () {
+      if (this.value === '0') { // Nếu giá trị là '0' (Movie)
+        durationContainer.style.display = 'block';
+        videoContainer.style.display = 'block';
+          videoInput.setAttribute('required', 'required'); // Đặt lại yêu cầu cho video
+      durationInput.setAttribute('required', 'required'); // Đặt lại yêu cầu cho duration
+      } else {
+        durationContainer.style.display = 'none';
+        videoContainer.style.display = 'none';
+          videoInput.removeAttribute('required'); // Loại bỏ yêu cầu cho video
+      durationInput.removeAttribute('required'); // Loại bỏ yêu cầu cho duration
+      }
+    });
+
+    if (typeDropdown.value === '0') {
+      durationContainer.style.display = 'block';
+      videoContainer.style.display = 'block';
+       videoInput.setAttribute('required', 'required');
+    durationInput.setAttribute('required', 'required');
+    }
+  });
+
+
+  $('#listActor').select2({
+    ajax: {
+      type: 'GET',
+      url: 'http://localhost:8083/cmsmovie/actor/ajax-search-actor',
+      dataType: 'json',
+      delay: 250,
+      data: function(params) {
+        return {
+          input_: params.term
+        };
+      },
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+      cache: true
+    },
+    placeholder: `[[#{select2.listActor}]]`,
+    minimumInputLength: 0,
+    allowClear: true,
+    multiple: true,
+    tags: true
+  }).val(getSelectedValues('listActor')).trigger('change');
+
+  function getSelectedValues(selectId) {
+    var selectElement = document.getElementById(selectId);
+    var selectedValues = [];
+    for (var i = 0; i < selectElement.options.length; i++) {
+      var option = selectElement.options[i];
+      selectedValues.push(option.value);
+    }
+    return selectedValues;
+  }
+
+</script>
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<style>
+
+</style>
+<body>
+<section class="content" th:fragment="content">
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 th:text="#{createBanner}"></h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item active"></li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- Default box -->
+        <div class="container-fluid">
+            <div class="card card-default">
+                <div class="card-body">
+                    <div class="d-flex justify-content-start mb-3">
+                        <a th:href="@{'/cmsmovie/banner/index/1'}"
+                           th:text="#{back}"
+                           class="btn btn-danger"
+                           style="width: 125px; left: 886px; top: 389px; border-radius: 3px; margin-left: 8px">
+                        </a>
+                    </div>
+                    <form th:action="@{'/cmsmovie/banner/save'}" method="post" th:object="${model}" enctype="multipart/form-data">
+                        <input type="hidden" id="id" name="id" th:value="${model.id}?${model.id}">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label for="title" style="font-weight: bold"><span>[[#{nameBanner}]]</span><span style="color:red"> *</span></label>
+                                <input type="text" id="title" th:field="*{title}" name="name"
+                                       class="form-control" required style="height: 35px" maxlength="50">
+                            </div>
+
+                            <div class="col-6">
+                                <label for="movie_banner_code" style="font-weight: bold"><span>[[#{id}]]</span><span style="color:red"> *</span></label>
+                                <input type="text" id="movie_banner_code" th:field="*{movie_banner_code}" name="movie_banner_code"
+                                       class="form-control" style="height: 35px" maxlength="50" required>
+                            </div>
+
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label for="banner_image" style="font-weight: bold"><span>[[#{image}]]</span><span style="color:red"> *</span></label>
+                                <input type="text" id="banner_image" th:field="*{banner_image}" name="banner_image"
+                                       class="form-control" required style="height: 35px" >
+                            </div>
+                            <div class="col-6">
+                                <label for="position" style="font-weight: bold"><span>[[#{position}]]</span><span style="color:red"> *</span></label>
+                                <input type="text" id="position" th:field="*{position}" name="position"
+                                       class="form-control" required style="height: 35px" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label for="start_date"><span>[[#{startDate}]] <span style="color: red;">*</span></span></label>
+                                <input type="datetime-local" id="start_date" name="start_date" th:field="*{start_date}"
+                                       class="form-control" step="1" required style="height: 31px">
+                            </div>
+
+                            <div class="col-6">
+                                <label for="end_date"><span>[[#{endDate}]] <span style="color: red;">*</span></span></label>
+                                <input type="datetime-local" id="end_date" name="end_date" th:field="*{end_date}"
+                                       class="form-control" step="1" required style="height: 31px">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label style="font-weight: bold"><span>[[#{status}]]</span><span style="color:red"> *</span></label>
+                                <select class="form-control" id="status" th:field="*{status}" name="status" required style="height: 31px;">
+                                    <option value='0' th:text="#{deactive}"></option>
+                                    <option value='1' th:text="#{active}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-start mb-3"
+                             style="padding-left: 0 !important;">
+                            <button id="submitButton" type="submit" class="btn btn-primary me-md-2"
+                                    th:text="#{create}"
+                                    style="width: 125px; left: 886px; top: 389px; border-radius: 3px;" th:if="${model.id==null}"></button>
+                            <button id="submitButton" type="submit" class="btn btn-primary me-md-2"
+                                    th:text="#{update}"
+                                    style="width: 125px; left: 886px; top: 389px; border-radius: 3px;" th:if="${model.id!=null}"></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+<script th:fragment="content">
+
+    //Check thoi gian startDate va endDate
+        $(document).ready(function () {
+            $('#start_date').on('change', function () {
+                let startDateValue = new Date($(this).val());
+                let endDateValue = new Date($('#end_date').val());
+                if (endDateValue < startDateValue) {
+                    $('#end_date').val($(this).val());
+                }
+                $('#end_date').attr('min', $(this).val());
+            });
+            $('#end_date').on('change', function () {
+                let startDateValue = new Date($('#start_date').val());
+                let endDateValue = new Date($(this).val());
+                if (startDateValue > endDateValue) {
+                    $('#start_date').val($(this).val());
+                }
+                $('#start_date').attr('max', $(this).val());
+            });
+        });
+</script>
+
+</body>
+</html>
+
+
+
